@@ -1,0 +1,26 @@
+{
+  "payment_id": "PMT-PLACEHOLDER",
+  "status": "RECEIVED",
+  "origin": "PIX",
+  "destination": "SPEI",
+  "canonical": {
+    "amount": 150.25,
+    "currency": "USD",
+    "debtor": {
+      "name": "Alice Silva",
+      "account_id": "PIX-alice.silva.2026",
+      "rail": "PIX"
+    },
+    "creditor": {
+      "name": "Bob García",
+      "account_id": "SPEI-012345678901234567",
+      "rail": "SPEI"
+    },
+    "purpose": "P2P",
+    "reference": "MIPIT-POC demo 01"
+  },
+  "timestamps": {
+    "created_at": "PLACEHOLDER",
+    "translated_at": "PLACEHOLDER"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "amount": 150.25,
+  "currency": "USD",
+  "debtor": {
+    "alias": "PIX-alice.silva.2026",
+    "name": "Alice Silva"
+  },
+  "creditor": {
+    "alias": "SPEI-012345678901234567",
+    "name": "Bob García"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-POC demo 01"
+}

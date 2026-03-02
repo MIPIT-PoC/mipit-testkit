@@ -1,0 +1,14 @@
+{
+  "amount": 0,
+  "currency": "USD",
+  "debtor": {
+    "alias": "PIX-invalid.amount.test",
+    "name": "Test User"
+  },
+  "creditor": {
+    "alias": "SPEI-012345678901234567",
+    "name": "Test Dest"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-INVALID-AMOUNT"
+}

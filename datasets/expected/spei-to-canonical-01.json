@@ -1,0 +1,26 @@
+{
+  "payment_id": "PMT-PLACEHOLDER",
+  "status": "RECEIVED",
+  "origin": "SPEI",
+  "destination": "PIX",
+  "canonical": {
+    "amount": 500.00,
+    "currency": "USD",
+    "debtor": {
+      "name": "Carlos Rodríguez",
+      "account_id": "SPEI-987654321098765432",
+      "rail": "SPEI"
+    },
+    "creditor": {
+      "name": "Fernanda Pereira",
+      "account_id": "PIX-fernanda.pereira.br",
+      "rail": "PIX"
+    },
+    "purpose": "REMITTANCE",
+    "reference": "MIPIT-POC demo 02"
+  },
+  "timestamps": {
+    "created_at": "PLACEHOLDER",
+    "translated_at": "PLACEHOLDER"
+  }
+}

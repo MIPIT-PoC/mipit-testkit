@@ -1,0 +1,19 @@
+{
+  "amount": 500.00,
+  "currency": "USD",
+  "debtor": {
+    "alias": "SPEI-987654321098765432",
+    "name": "Carlos Rodríguez"
+  },
+  "creditor": {
+    "alias": "PIX-fernanda.pereira.br",
+    "name": "Fernanda Pereira"
+  },
+  "purpose": "REMITTANCE",
+  "reference": "MIPIT-POC demo 02",
+  "rail_format": "PIX",
+  "pix_metadata": {
+    "key_type": "EVP",
+    "pix_key": "fernanda.pereira.br"
+  }
+}

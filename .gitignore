@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+evidence/*.json
+evidence/*.html
+!evidence/.gitkeep
+*.tsbuildinfo
+coverage/

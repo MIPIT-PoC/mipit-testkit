@@ -1,0 +1,14 @@
+{
+  "amount": 100.00,
+  "currency": "USD",
+  "debtor": {
+    "alias": "INVALID!!@@##$$",
+    "name": "Bad Alias User"
+  },
+  "creditor": {
+    "alias": "SPEI-012345678901234567",
+    "name": "Test Dest"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-INVALID-ALIAS"
+}

@@ -1,0 +1,14 @@
+{
+  "amount": 300.00,
+  "currency": "USD",
+  "debtor": {
+    "alias": "SPEI-12345",
+    "name": "Bad CLABE User"
+  },
+  "creditor": {
+    "alias": "PIX-test.clabe.invalid",
+    "name": "Test Dest"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-INVALID-CLABE"
+}

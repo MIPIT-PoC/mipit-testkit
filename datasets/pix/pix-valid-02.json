@@ -1,0 +1,14 @@
+{
+  "amount": 2750.00,
+  "currency": "USD",
+  "debtor": {
+    "alias": "PIX-carlos.pereira.rio",
+    "name": "Carlos Pereira"
+  },
+  "creditor": {
+    "alias": "SPEI-598712340056781234",
+    "name": "Diana Hernández"
+  },
+  "purpose": "REMITTANCE",
+  "reference": "MIPIT-POC demo 02"
+}
