@@ -15,7 +15,8 @@
     "smoke": "bash tools/smoke-test.sh",
     "e2e": "bash tools/run-e2e.sh",
     "evidence": "bash tools/generate-evidence.sh",
-    "report": "tsx tools/report.ts"
+    "report": "tsx tools/report.ts",
+    "validate:suite": "tsx tools/run-validation-suite.ts"
   },
   "dependencies": {
     "zod": "^3.24.0",

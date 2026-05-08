@@ -34,6 +34,9 @@ npm run e2e
 # Generate evidence bundle
 npm run evidence
 npm run report
+
+# Unified validation suite
+npm run validate:suite
 ```
 
 ## Directory Structure
@@ -57,6 +60,29 @@ evidence/       Generated test reports
 | Variable  | Default                  | Description        |
 |-----------|--------------------------|--------------------|
 | `API_URL` | `http://localhost:8080`  | MiPIT Core API URL |
+
+## Validation Suite
+
+The unified validation suite wraps:
+
+- historical documented scenarios already present in this repo,
+- local Jest suites across the main repos,
+- `mipit-core` validation runner,
+- Carlos' core E2E scenarios,
+- load/routing/benchmark scripts,
+- resilience/retry/schema-evolution scripts when the environment supports them.
+
+Configuration:
+
+1. Copy `.env.validation.example` to `.env.validation`
+2. Adjust `BASE_URL` and optional infra URLs
+3. Run `npm run validate:suite`
+
+Artifacts are written under `evidence/suite/<timestamp>/`:
+
+- `validation-suite-report.json`
+- `validation-suite-report.md`
+- one `.log` file per executed scenario
 
 ## License
 
