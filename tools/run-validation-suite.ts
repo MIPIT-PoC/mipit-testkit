@@ -49,6 +49,26 @@ const evidenceRoot = path.join(repoRoot, 'evidence', 'suite');
 const stamp = new Date().toISOString().replace(/[:.]/g, '-');
 const runDir = path.join(evidenceRoot, stamp);
 
+function loadEnvFile(filePath: string) {
+  if (!fs.existsSync(filePath)) return;
+  const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const idx = trimmed.indexOf('=');
+    if (idx < 0) continue;
+    const key = trimmed.slice(0, idx).trim();
+    const value = trimmed.slice(idx + 1).trim();
+    if (!process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+}
+
+// Load env file BEFORE evaluating defaults so RUN_REPO_TESTS, BASE_URL, etc.
+// from .env.validation actually take effect.
+loadEnvFile(path.join(repoRoot, '.env.validation'));
+
 const defaults = {
   mode: process.env.VALIDATION_MODE ?? 'local',
   baseUrl: process.env.BASE_URL ?? 'http://localhost:8080',
@@ -67,24 +87,6 @@ const defaults = {
 };
 
 let cachedToken: string | null = null;
-
-function loadEnvFile(filePath: string) {
-  if (!fs.existsSync(filePath)) return;
-  const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const idx = trimmed.indexOf('=');
-    if (idx < 0) continue;
-    const key = trimmed.slice(0, idx).trim();
-    const value = trimmed.slice(idx + 1).trim();
-    if (!process.env[key]) {
-      process.env[key] = value;
-    }
-  }
-}
-
-loadEnvFile(path.join(repoRoot, '.env.validation'));
 
 if (defaults.skipTlsValidation) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
