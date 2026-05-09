@@ -43,6 +43,10 @@ type CommandOutcome = {
   stderr: string;
 };
 
+// Cross-platform binary names: npm.cmd / npx.cmd are Windows-only.
+const NPM_BIN = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const NPX_BIN = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+
 const repoRoot = path.resolve(process.cwd());
 const thesisRoot = path.resolve(repoRoot, '..');
 const evidenceRoot = path.join(repoRoot, 'evidence', 'suite');
@@ -501,7 +505,7 @@ async function main() {
         id: repo.id,
         title: repo.title,
         category: 'local',
-        command: 'npm.cmd',
+        command: NPM_BIN,
         args: ['test', '--', '--runInBand'],
         workdir: repo.dir,
         parser: summarizeJest,
@@ -515,28 +519,28 @@ async function main() {
       {
         id: 'core-validation',
         title: 'Core validation runner',
-        command: 'npm.cmd',
+        command: NPM_BIN,
         args: ['run', 'validate:core'],
         parser: summarizeCoreValidation,
       },
       {
         id: 'core-e2e-carlos-simplified',
         title: 'Carlos - 12 pruebas simplificadas',
-        command: 'npx.cmd',
+        command: NPX_BIN,
         args: ['jest', 'test/e2e/error-scenarios-simplified.test.ts', '--forceExit', '--detectOpenHandles'],
         parser: summarizeJest,
       },
       {
         id: 'core-e2e-carlos-full',
         title: 'Carlos - escenarios de error completos',
-        command: 'npx.cmd',
+        command: NPX_BIN,
         args: ['jest', 'test/e2e/error-scenarios.test.ts', '--forceExit', '--detectOpenHandles'],
         parser: summarizeJest,
       },
       {
         id: 'core-e2e-routing',
         title: 'Core - routing e2e',
-        command: 'npx.cmd',
+        command: NPX_BIN,
         args: ['jest', 'test/e2e/routing.test.ts', '--forceExit', '--detectOpenHandles'],
         parser: summarizeJest,
       },
