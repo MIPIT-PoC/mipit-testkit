@@ -25,8 +25,10 @@ const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
 
 import { execSync } from 'child_process';
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
 
 const H = { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` };
+const logger = createTraceLogger('e2e-retry-timeout');
 let pass = 0, fail = 0, total = 0;
 
 function assert(cond, label, detail) {
@@ -36,25 +38,34 @@ function assert(cond, label, detail) {
 }
 
 async function post(path, body, extra = {}) {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetchWithTrace(logger, `POST ${path}`, `${BASE}${path}`, {
     method: 'POST', headers: { ...H, ...extra },
     body: JSON.stringify(body), signal: AbortSignal.timeout(30000),
   });
-  const data = await res.json().catch(() => ({}));
-  return { status: res.status, data };
+  return { status: res.status, data: res.body };
 }
 
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`, { headers: H, signal: AbortSignal.timeout(10000) });
-  return res.json().catch(() => ({}));
+  const res = await fetchWithTrace(logger, `GET ${path}`, `${BASE}${path}`, {
+    headers: H,
+    signal: AbortSignal.timeout(10000),
+  });
+  return res.body;
 }
 
 function dockerLogs(container, tail = 100) {
   try {
-    return execSync(`docker logs --tail ${tail} ${container} 2>&1`, {
+    logger.step(`docker logs --tail ${tail} ${container}`);
+    const output = execSync(`docker logs --tail ${tail} ${container} 2>&1`, {
       encoding: 'utf-8', timeout: 10000,
     });
-  } catch (e) { return e.stdout ?? ''; }
+    logger.event(`docker logs ${container}`, output);
+    return output;
+  } catch (e) {
+    const output = e.stdout ?? '';
+    logger.error(`docker logs ${container}`, output);
+    return output;
+  }
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -70,6 +81,8 @@ async function pollTerminal(paymentId, timeoutMs = 20000) {
 }
 
 async function main() {
+  logger.banner('START e2e-retry-timeout');
+  logger.step('configuration', { BASE });
   console.log('');
   console.log('════════════════════════════════════════════════════════════');
   console.log('  MIPIT — Timeout/Retry Verification');

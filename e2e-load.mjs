@@ -4,9 +4,12 @@
  * Usage: TOKEN=xxx node e2e-load.mjs [totalRequests] [concurrency]
  */
 
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
+
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
+const logger = createTraceLogger('e2e-load');
 
 const TOTAL = parseInt(process.argv[2] || '1000', 10);
 const CONCURRENCY = parseInt(process.argv[3] || '20', 10);
@@ -28,7 +31,7 @@ async function sendPayment(idx) {
 
   const start = performance.now();
   try {
-    const res = await fetch(`${BASE_URL}/payments`, {
+    const res = await fetchWithTrace(logger, `load-payment-${idx}`, `${BASE_URL}/payments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,17 +48,23 @@ async function sendPayment(idx) {
       }),
       signal: AbortSignal.timeout(30000),
     });
-    const elapsed = Math.round(performance.now() - start);
+    const elapsed = res.elapsedMs ?? Math.round(performance.now() - start);
     stats.latencies.push(elapsed);
 
     if (res.ok) {
-      const data = await res.json();
+      const data = res.body;
       stats.ok++;
       const destRail = data.destination_rail || '?';
       stats.destCounts[destRail] = (stats.destCounts[destRail] || 0) + 1;
+      logger.event(`load-payment-${idx}-accepted`, {
+        payment_id: data.payment_id,
+        destination_rail: destRail,
+        status: data.status,
+        elapsed_ms: elapsed,
+      });
     } else {
       stats.fail++;
-      const body = await res.text().catch(() => '');
+      const body = typeof res.body === 'string' ? res.body : JSON.stringify(res.body);
       stats.errors.push(`[${idx}] HTTP ${res.status}: ${body.slice(0,100)}`);
     }
   } catch (err) {
@@ -75,6 +84,12 @@ async function runBatch(startIdx, count) {
 }
 
 async function main() {
+  logger.banner('START e2e-load');
+  logger.step('configuration', {
+    BASE_URL,
+    TOTAL,
+    CONCURRENCY,
+  });
   console.log('');
   console.log('========================================================');
   console.log('  MIPIT Load Test (Node.js)');

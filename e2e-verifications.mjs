@@ -12,9 +12,12 @@
  * 8. Pipeline status progression + audit events
  */
 
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
+
 const BASE = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
+const logger = createTraceLogger('e2e-verifications');
 
 const H = { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` };
 
@@ -32,21 +35,20 @@ function assert(condition, label, detail) {
 }
 
 async function post(path, body, extraHeaders = {}) {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetchWithTrace(logger, `POST ${path}`, `${BASE}${path}`, {
     method: 'POST', headers: { ...H, ...extraHeaders },
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(30000),
   });
-  const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); } catch { data = text; }
-  return { status: res.status, data };
+  return { status: res.status, data: res.body };
 }
 
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`, { headers: H, signal: AbortSignal.timeout(15000) });
-  const data = await res.json();
-  return { status: res.status, data };
+  const res = await fetchWithTrace(logger, `GET ${path}`, `${BASE}${path}`, {
+    headers: H,
+    signal: AbortSignal.timeout(15000),
+  });
+  return { status: res.status, data: res.body };
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -587,6 +589,8 @@ async function test8_pipeline() {
 // MAIN
 // ═══════════════════════════════════════════════════
 async function main() {
+  logger.banner('START e2e-verifications');
+  logger.step('configuration', { BASE });
   console.log('');
   console.log('════════════════════════════════════════════════════════');
   console.log('  MIPIT — 8 Comprehensive E2E Verification Tests');

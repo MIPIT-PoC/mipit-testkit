@@ -11,11 +11,14 @@
  *   6. Minimal payloads (only required fields) still translate correctly
  */
 
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
+
 const BASE = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
 
 const H = { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` };
+const logger = createTraceLogger('e2e-schema-evolution');
 let pass = 0, fail = 0, total = 0;
 
 function assert(cond, label, detail) {
@@ -25,24 +28,26 @@ function assert(cond, label, detail) {
 }
 
 async function post(path, body) {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetchWithTrace(logger, `POST ${path}`, `${BASE}${path}`, {
     method: 'POST', headers: H,
     body: JSON.stringify(body), signal: AbortSignal.timeout(15000),
   });
-  const text = await res.text();
-  let data;
-  try { data = JSON.parse(text); } catch { data = text; }
-  return { status: res.status, data };
+  return { status: res.status, data: res.body };
 }
 
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`, { headers: H, signal: AbortSignal.timeout(10000) });
-  return { status: res.status, data: await res.json().catch(() => ({})) };
+  const res = await fetchWithTrace(logger, `GET ${path}`, `${BASE}${path}`, {
+    headers: H,
+    signal: AbortSignal.timeout(10000),
+  });
+  return { status: res.status, data: res.body };
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function main() {
+  logger.banner('START e2e-schema-evolution');
+  logger.step('configuration', { BASE });
   console.log('');
   console.log('════════════════════════════════════════════════════════════');
   console.log('  MIPIT — Schema Evolution Test (Backward Compatibility)');

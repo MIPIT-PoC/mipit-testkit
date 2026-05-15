@@ -12,9 +12,12 @@
  * throughput (req/s), and error rates.
  */
 
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
+
 const BASE = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
+const logger = createTraceLogger('e2e-benchmark-latency');
 
 const DURATION_S = parseInt(process.argv[2] || '30', 10);
 const RPS_TARGET = parseInt(process.argv[3] || '50', 10);
@@ -62,9 +65,11 @@ function formatStats(label, latencies, errors) {
 async function timedFetch(url, opts) {
   const start = performance.now();
   try {
-    const res = await fetch(url, { ...opts, signal: AbortSignal.timeout(15000) });
-    const elapsed = Math.round(performance.now() - start);
-    await res.text();
+    const res = await fetchWithTrace(logger, `benchmark ${opts.method ?? 'GET'} ${url}`, url, {
+      ...opts,
+      signal: AbortSignal.timeout(15000),
+    }, 'text');
+    const elapsed = res.elapsedMs ?? Math.round(performance.now() - start);
     return { elapsed, ok: res.ok, status: res.status };
   } catch {
     return { elapsed: Math.round(performance.now() - start), ok: false, status: 0 };
@@ -193,6 +198,8 @@ async function benchmarkGetPayment() {
 }
 
 async function main() {
+  logger.banner('START e2e-benchmark-latency');
+  logger.step('configuration', { BASE, DURATION_S, RPS_TARGET });
   console.log('');
   console.log('════════════════════════════════════════════════════════════');
   console.log('  MIPIT — Latency Benchmark');

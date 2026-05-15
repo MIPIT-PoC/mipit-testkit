@@ -41,6 +41,7 @@ type CommandOutcome = {
   exitCode: number | null;
   stdout: string;
   stderr: string;
+  logPath: string;
 };
 
 // Cross-platform binary names: npm.cmd / npx.cmd are Windows-only.
@@ -100,13 +101,25 @@ async function ensureRunDir() {
   await fsp.mkdir(runDir, { recursive: true });
 }
 
+function scenarioLogPath(name: string) {
+  const safeName = name.replace(/[^a-z0-9-_]+/gi, '-').toLowerCase();
+  return path.join(runDir, `${safeName}.log`);
+}
+
 async function runCommand(
   command: string,
   args: string[],
   workdir: string,
+  logName: string,
   env?: NodeJS.ProcessEnv,
 ): Promise<CommandOutcome> {
   return new Promise((resolve) => {
+    const logPath = scenarioLogPath(logName);
+    const stream = fs.createWriteStream(logPath, { encoding: 'utf8' });
+    stream.write(`# command\n${command} ${(args ?? []).join(' ')}\n\n`);
+    stream.write(`# workdir\n${workdir}\n\n`);
+    stream.write(`# stdout\n`);
+
     const child = spawn(command, args, {
       cwd: workdir,
       env: { ...process.env, ...env },
@@ -117,31 +130,27 @@ async function runCommand(
     let stderr = '';
 
     child.stdout.on('data', (chunk) => {
-      stdout += chunk.toString();
+      const text = chunk.toString();
+      stdout += text;
+      process.stdout.write(text);
+      stream.write(text);
     });
 
     child.stderr.on('data', (chunk) => {
-      stderr += chunk.toString();
+      const text = chunk.toString();
+      stderr += text;
+      process.stderr.write(text);
+      if (!stderr) {
+        stream.write(`\n# stderr\n`);
+      }
+      stream.write(text);
     });
 
     child.on('close', (code) => {
-      resolve({ exitCode: code, stdout, stderr });
+      stream.end();
+      resolve({ exitCode: code, stdout, stderr, logPath });
     });
   });
-}
-
-async function writeLog(name: string, outcome: CommandOutcome) {
-  const safeName = name.replace(/[^a-z0-9-_]+/gi, '-').toLowerCase();
-  const logPath = path.join(runDir, `${safeName}.log`);
-  const content = [
-    `# stdout`,
-    outcome.stdout,
-    '',
-    `# stderr`,
-    outcome.stderr,
-  ].join('\n');
-  await fsp.writeFile(logPath, content, 'utf8');
-  return logPath;
 }
 
 function summarizeJest(text: string): Record<string, unknown> | undefined {
@@ -322,7 +331,7 @@ async function issueToken(): Promise<string | null> {
 }
 
 async function dockerAvailable(): Promise<boolean> {
-  const outcome = await runCommand('docker', ['ps'], repoRoot).catch(() => null);
+  const outcome = await runCommand('docker', ['ps'], repoRoot, 'docker-availability').catch(() => null);
   return Boolean(outcome && outcome.exitCode === 0);
 }
 
@@ -343,7 +352,10 @@ async function executeScenario(
 ): Promise<ScenarioResult> {
   const started = Date.now();
 
+  console.log(`\n=== [${spec.id}] ${spec.title} ===`);
+
   if (spec.skipReason) {
+    console.log(`SKIPPED: ${spec.skipReason}`);
     return {
       id: spec.id,
       title: spec.title,
@@ -357,6 +369,7 @@ async function executeScenario(
   }
 
   if (!spec.command || !spec.workdir) {
+    console.log('PASSED (documented/historical scenario)');
     return {
       id: spec.id,
       title: spec.title,
@@ -369,10 +382,13 @@ async function executeScenario(
     };
   }
 
-  const outcome = await runCommand(spec.command, spec.args ?? [], spec.workdir, spec.env);
-  const logPath = await writeLog(spec.id, outcome);
+  console.log(`Command: ${[spec.command, ...(spec.args ?? [])].join(' ')}`);
+  console.log(`Workdir: ${spec.workdir}`);
+  const outcome = await runCommand(spec.command, spec.args ?? [], spec.workdir, spec.id, spec.env);
   const mergedText = `${outcome.stdout}\n${outcome.stderr}`;
   const parsed = spec.parser ? spec.parser(mergedText) : undefined;
+  console.log(`Result: ${outcome.exitCode === 0 ? 'PASSED' : 'FAILED'} (exit ${outcome.exitCode ?? 'null'})`);
+  console.log(`Scenario log: ${outcome.logPath}`);
 
   return {
     id: spec.id,
@@ -383,7 +399,7 @@ async function executeScenario(
     durationMs: Date.now() - started,
     command: [spec.command, ...(spec.args ?? [])].join(' '),
     workdir: spec.workdir,
-    logPath,
+    logPath: outcome.logPath,
     summary: parsed ?? spec.summary,
     notes: spec.notes,
   };
@@ -454,6 +470,7 @@ async function main() {
     BASE_URL: defaults.baseUrl,
     API_URL: defaults.baseUrl,
     TOKEN: token ?? '',
+    MIPIT_TRACE_DIR: runDir,
     NODE_TLS_REJECT_UNAUTHORIZED: defaults.skipTlsValidation ? '0' : process.env.NODE_TLS_REJECT_UNAUTHORIZED,
     API_PROTOCOL: defaults.baseUrl.startsWith('https://') ? 'https' : 'http',
     API_HOST: new URL(defaults.baseUrl).hostname,

@@ -7,9 +7,12 @@
  * No cross-contamination, no lost payments.
  */
 
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
+
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
+const logger = createTraceLogger('e2e-routing-correctness');
 
 const RAILS_TO_TEST = (process.argv[2] || 'PIX,SPEI,BRE_B').split(',');
 const PER_RAIL = parseInt(process.argv[3] || '333', 10);
@@ -61,7 +64,7 @@ async function createPayment(idx, expectedRail) {
   const destAlias = aliases[idx % aliases.length];
   const idemKey = `routing-${expectedRail}-${idx}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
 
-  const res = await fetch(`${BASE_URL}/payments`, {
+  const res = await fetchWithTrace(logger, `routing-create-${expectedRail}-${idx}`, `${BASE_URL}/payments`, {
     method: 'POST',
     headers: { ...headers, 'Idempotency-Key': idemKey },
     body: JSON.stringify({
@@ -76,11 +79,12 @@ async function createPayment(idx, expectedRail) {
   });
 
   if (!res.ok) {
-    const body = await res.text().catch(() => '');
+    const body = typeof res.body === 'string' ? res.body : JSON.stringify(res.body);
     return { idx, expectedRail, error: `HTTP ${res.status}: ${body.slice(0, 120)}` };
   }
 
-  const data = await res.json();
+  const data = res.body;
+  logger.event(`routing-create-result-${expectedRail}-${idx}`, data);
   return {
     idx,
     expectedRail,
@@ -91,12 +95,12 @@ async function createPayment(idx, expectedRail) {
 }
 
 async function checkPayment(paymentId) {
-  const res = await fetch(`${BASE_URL}/payments/${paymentId}`, {
+  const res = await fetchWithTrace(logger, `routing-check-${paymentId}`, `${BASE_URL}/payments/${paymentId}`, {
     headers,
     signal: AbortSignal.timeout(10000),
   });
   if (!res.ok) return null;
-  return res.json();
+  return res.body;
 }
 
 async function runBatch(items, fn) {
@@ -112,6 +116,14 @@ async function runBatch(items, fn) {
 }
 
 async function main() {
+  logger.banner('START e2e-routing-correctness');
+  logger.step('configuration', {
+    BASE_URL,
+    RAILS_TO_TEST,
+    PER_RAIL,
+    CONCURRENCY,
+    POLL_WAIT_MS,
+  });
   const totalPayments = PER_RAIL * RAILS_TO_TEST.length;
 
   console.log('');

@@ -16,10 +16,12 @@
  */
 
 import { execSync } from 'child_process';
+import { createTraceLogger, fetchWithTrace } from './logging.mjs';
 
 const BASE = process.env.BASE_URL || 'http://localhost:8080';
 const TOKEN = process.env.TOKEN;
 if (!TOKEN) { console.error('Set TOKEN env var'); process.exit(1); }
+const logger = createTraceLogger('e2e-resilience');
 
 const RABBITMQ_API = process.env.RABBITMQ_API || 'http://localhost:15672/api';
 const RABBITMQ_AUTH = 'guest:guest';
@@ -36,17 +38,19 @@ function assert(cond, label, detail) {
 }
 
 async function post(path, body, extra = {}) {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetchWithTrace(logger, `POST ${path}`, `${BASE}${path}`, {
     method: 'POST', headers: { ...H, ...extra },
     body: JSON.stringify(body), signal: AbortSignal.timeout(30000),
   });
-  const data = await res.json().catch(() => ({}));
-  return { status: res.status, data };
+  return { status: res.status, data: res.body };
 }
 
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`, { headers: H, signal: AbortSignal.timeout(10000) });
-  return res.json().catch(() => ({}));
+  const res = await fetchWithTrace(logger, `GET ${path}`, `${BASE}${path}`, {
+    headers: H,
+    signal: AbortSignal.timeout(10000),
+  });
+  return res.body;
 }
 
 async function getQueueDepth(queueName) {
@@ -61,8 +65,17 @@ async function getQueueDepth(queueName) {
 }
 
 function dockerCmd(cmd) {
-  try { return execSync(`docker ${cmd}`, { encoding: 'utf-8', timeout: 30000 }).trim(); }
-  catch (e) { return e.stdout?.trim() ?? e.message; }
+  logger.step(`docker ${cmd}`);
+  try {
+    const output = execSync(`docker ${cmd}`, { encoding: 'utf-8', timeout: 30000 }).trim();
+    logger.event(`docker ${cmd} output`, output);
+    return output;
+  }
+  catch (e) {
+    const output = e.stdout?.trim() ?? e.message;
+    logger.error(`docker ${cmd}`, output);
+    return output;
+  }
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -78,6 +91,8 @@ async function pollTerminal(paymentId, timeoutMs = 30000) {
 }
 
 async function main() {
+  logger.banner('START e2e-resilience');
+  logger.step('configuration', { BASE, TARGET_RAIL, ADAPTER_CONTAINER, PAYMENT_COUNT, RABBITMQ_API });
   console.log('');
   console.log('════════════════════════════════════════════════════════════');
   console.log('  MIPIT — Resilience Testing');

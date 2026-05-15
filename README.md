@@ -83,6 +83,15 @@ Artifacts are written under `evidence/suite/<timestamp>/`:
 - `validation-suite-report.json`
 - `validation-suite-report.md`
 - one `.log` file per executed scenario
+- optional `.trace.log` files for scripts that emit request/response traces
+
+The scenario logs now include detailed process traces such as:
+
+- every HTTP request sent
+- headers and payloads relevant to the scenario
+- HTTP responses received
+- phase/progress markers while a suite is running
+- docker/log inspection steps in resilience and retry scenarios
 
 ## License
 
