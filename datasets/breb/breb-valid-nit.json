@@ -1,0 +1,14 @@
+{
+  "amount": 1500000.00,
+  "currency": "COP",
+  "debtor": {
+    "alias": "BREB-900123456-7",
+    "name": "Empresa Andina SAS"
+  },
+  "creditor": {
+    "alias": "PIX-comercio.brasil.empresa@mipit.test",
+    "name": "Comércio Brasil Ltda"
+  },
+  "purpose": "INVOICE",
+  "reference": "MIPIT-POC demo BRE_B NIT invoice"
+}

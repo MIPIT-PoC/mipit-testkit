@@ -11,7 +11,7 @@ describe('E2E: SPEI → PIX', () => {
       body: JSON.stringify({
         amount: 500.00,
         currency: 'USD',
-        debtor: { alias: 'SPEI-987654321098765432', name: 'Carlos Rodríguez' },
+        debtor: { alias: 'SPEI-987654321098765437', name: 'Carlos Rodríguez' },
         creditor: { alias: 'PIX-fernanda.pereira.br', name: 'Fernanda Pereira' },
         purpose: 'REMITTANCE',
         reference: 'E2E-SPEI-PIX-TEST',
@@ -58,7 +58,7 @@ describe('E2E: SPEI → PIX', () => {
     const body = {
       amount: 250,
       currency: 'USD',
-      debtor: { alias: 'SPEI-111111111111111111', name: 'Test SPEI' },
+      debtor: { alias: 'SPEI-111111111111111115', name: 'Test SPEI' },
       creditor: { alias: 'PIX-test.idem.spei', name: 'Test PIX' },
     };
 
@@ -88,7 +88,7 @@ describe('E2E: SPEI → PIX', () => {
       body: JSON.stringify({
         amount: 300,
         currency: 'USD',
-        debtor: { alias: 'SPEI-222222222222222222' },
+        debtor: { alias: 'SPEI-222222222222222220' },
         creditor: { alias: 'PIX-conflict.spei.test' },
       }),
     });
@@ -99,7 +99,7 @@ describe('E2E: SPEI → PIX', () => {
       body: JSON.stringify({
         amount: 888,
         currency: 'USD',
-        debtor: { alias: 'SPEI-333333333333333333' },
+        debtor: { alias: 'SPEI-333333333333333335' },
         creditor: { alias: 'PIX-conflict.spei.other' },
       }),
     });

@@ -1,0 +1,14 @@
+{
+  "amount": 100000,
+  "currency": "COP",
+  "debtor": {
+    "alias": "BREB-ab",
+    "name": "Bad Llave"
+  },
+  "creditor": {
+    "alias": "PIX-some.valid.key@mipit.test",
+    "name": "Receiver"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-POC invalid Bre-B llave (too short)"
+}

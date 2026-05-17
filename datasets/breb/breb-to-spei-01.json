@@ -1,0 +1,14 @@
+{
+  "amount": 350000.00,
+  "currency": "COP",
+  "debtor": {
+    "alias": "BREB-@helena.medellin",
+    "name": "Helena Martínez"
+  },
+  "creditor": {
+    "alias": "SPEI-012180001234567899",
+    "name": "Gustavo García"
+  },
+  "purpose": "REMITTANCE",
+  "reference": "MIPIT-POC BRE_B → SPEI"
+}

@@ -9,7 +9,7 @@ describe('E2E: Idempotency', () => {
       amount: 500,
       currency: 'USD',
       debtor: { alias: 'PIX-e2e.idem.test', name: 'E2E Idem' },
-      creditor: { alias: 'SPEI-777777777777777777', name: 'E2E Dest' },
+      creditor: { alias: 'SPEI-777777777777777775', name: 'E2E Dest' },
       purpose: 'TRANSFER',
       reference: 'E2E-IDEM-TEST',
     };
@@ -35,7 +35,7 @@ describe('E2E: Idempotency', () => {
       amount: 750,
       currency: 'USD',
       debtor: { alias: 'PIX-concurrent.idem', name: 'Concurrent' },
-      creditor: { alias: 'SPEI-888888888888888888', name: 'Concurrent Dest' },
+      creditor: { alias: 'SPEI-888888888888888880', name: 'Concurrent Dest' },
       purpose: 'P2P',
     };
 

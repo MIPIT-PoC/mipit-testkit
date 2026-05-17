@@ -319,9 +319,9 @@ async function issueToken(): Promise<string | null> {
       body: '{}',
       signal: AbortSignal.timeout(5000),
     });
-    const body = await res.json().catch(() => ({}));
+    const body = (await res.json().catch(() => ({}))) as { access_token?: string };
     if (res.ok && body.access_token) {
-      cachedToken = body.access_token as string;
+      cachedToken = body.access_token;
       return cachedToken;
     }
     return null;

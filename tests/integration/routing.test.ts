@@ -66,7 +66,7 @@ describe('Integration: Routing — PIX → SPEI', () => {
       amount: 1500,
       currency: 'USD',
       debtor:   { alias: 'PIX-joao@email.com',       name: 'João Silva' },
-      creditor: { alias: 'SPEI-012180000118359719',   name: 'María García' },
+      creditor: { alias: 'SPEI-012180000118359713',   name: 'María García' },
       purpose: 'P2P',
     });
 
@@ -80,7 +80,7 @@ describe('Integration: Routing — PIX → SPEI', () => {
       amount: 2500,
       currency: 'USD',
       debtor:   { alias: 'PIX-+5521999887766',        name: 'Ana Costa' },
-      creditor: { alias: 'SPEI-002180012345678901',   name: 'Luis Mendoza' },
+      creditor: { alias: 'SPEI-002180012345678906',   name: 'Luis Mendoza' },
       purpose: 'SUPP',
     });
     expect(status).toBe(201);
@@ -140,7 +140,7 @@ describe('Integration: Routing — SPEI → BRE_B', () => {
     const { status, data } = await postPayment({
       amount: 250,
       currency: 'USD',
-      debtor:   { alias: 'SPEI-002180012345678901',  name: 'Rosa Martínez' },
+      debtor:   { alias: 'SPEI-002180012345678906',  name: 'Rosa Martínez' },
       creditor: { alias: 'BREB-+573001234567',       name: 'Carlos López' },
       purpose: 'P2P',
     });
@@ -175,7 +175,7 @@ describe('Integration: Routing — Concurrent multi-rail requests', () => {
           amount: 100 + i * 10,
           currency: 'USD',
           debtor:   { alias: `PIX-user${i}@test.com`,     name: `Debtor ${i}` },
-          creditor: { alias: 'SPEI-012180000118359719',   name: `Creditor ${i}` },
+          creditor: { alias: 'SPEI-012180000118359713',   name: `Creditor ${i}` },
           purpose: 'P2P',
         })
       )
@@ -219,7 +219,7 @@ describe('Integration: Routing — Concurrent multi-rail requests', () => {
         amount: 100,
         currency: 'USD',
         debtor:   { alias: 'PIX-brazil@test.com',      name: 'João' },
-        creditor: { alias: 'SPEI-012180000118359719',  name: 'María' },
+        creditor: { alias: 'SPEI-012180000118359713',  name: 'María' },
         purpose: 'P2P',
       }),
       postPayment({
@@ -271,7 +271,7 @@ describe('Integration: Routing — Alias-based routing rules', () => {
     const { status, data } = await postPayment({
       amount: 100,
       currency: 'USD',
-      debtor:   { alias: 'SPEI-002180012345678901',  name: 'MX Sender' },
+      debtor:   { alias: 'SPEI-002180012345678906',  name: 'MX Sender' },
       creditor: { alias: 'PIX-+5511987654321',       name: 'BR Receiver' },
       purpose: 'P2P',
     });
@@ -285,7 +285,7 @@ describe('Integration: Routing — Alias-based routing rules', () => {
       amount: 100,
       currency: 'USD',
       debtor:   { alias: 'PIX-brazil@test.com',      name: 'BR Sender' },
-      creditor: { alias: 'SPEI-002180000118359719',  name: 'MX Receiver' },
+      creditor: { alias: 'SPEI-002180000118359710',  name: 'MX Receiver' },
       purpose: 'P2P',
     });
 

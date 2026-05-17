@@ -1,4 +1,21 @@
-import { randomAmount, randomPixKey, randomName, randomPurpose } from './utils.js';
+/**
+ * P10 — PIX dataset generator.
+ *
+ * Audit finding G2: previous version emitted random base64-ish strings as
+ * "PIX keys" and 18 random digits as a CLABE. Real adapters / DICT / STP
+ * would reject 9/10 of those. Now we use the new validating generators in
+ * `./utils.ts`.
+ *
+ * Output: PIX→SPEI test payloads (BRL→MXN with implicit FX) using checksum-
+ * bearing PIX keys (CPF / phone / email / EVP) and valid CLABEs.
+ */
+import {
+  randomAmount,
+  randomPixKey,
+  randomClabe,
+  randomName,
+  randomPurpose,
+} from './utils.js';
 import fs from 'node:fs';
 
 interface PixDataset {
@@ -13,13 +30,16 @@ interface PixDataset {
 function generatePixPayload(): PixDataset {
   return {
     amount: randomAmount(),
-    currency: 'USD',
+    // P10 — PIX uses BRL natively; canonical normalization handles FX.
+    currency: 'BRL',
     debtor: {
+      // P10 — `PIX-` prefix is the PoC convention; payload is a valid DICT key.
       alias: `PIX-${randomPixKey()}`,
       name: randomName(),
     },
     creditor: {
-      alias: `SPEI-${Array.from({ length: 18 }, () => Math.floor(Math.random() * 10)).join('')}`,
+      // P10 — Mexican CLABE with proper mod-10 check digit.
+      alias: `SPEI-${randomClabe()}`,
       name: randomName(),
     },
     purpose: randomPurpose(),

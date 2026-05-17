@@ -19,7 +19,7 @@ touch "$RESULTS_FILE" "$ERRORS_FILE"
 
 RAILS=("PIX" "SPEI" "BRE_B")
 PIX_ALIASES=("PIX-joao@email.com" "PIX-maria@banco.br" "PIX-pedro@pix.com" "PIX-ana@gmail.com" "PIX-lucas@hotmail.com")
-SPEI_ALIASES=("SPEI-012180000118359780" "SPEI-014180000228456712" "SPEI-002180000334567890")
+SPEI_ALIASES=("SPEI-012180000118359784" "SPEI-014180000228456711" "SPEI-002180000334567894")
 BREB_ALIASES=("BREB-+573001234567" "BREB-+573205551234" "BREB-+573109876543")
 
 get_random_dest_alias() {
@@ -43,7 +43,7 @@ get_random_dest_alias() {
 
 send_one() {
   local idx="$1"
-  local origin_alias="SPEI-014180000228456712"
+  local origin_alias="SPEI-014180000228456711"
   local dest_alias
   dest_alias=$(get_random_dest_alias "SPEI")
   local amount=$((100 + RANDOM % 99900))

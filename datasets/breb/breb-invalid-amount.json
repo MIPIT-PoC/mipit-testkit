@@ -1,0 +1,14 @@
+{
+  "amount": -50.00,
+  "currency": "COP",
+  "debtor": {
+    "alias": "BREB-@negative.amount",
+    "name": "Negative Sender"
+  },
+  "creditor": {
+    "alias": "PIX-12345678901",
+    "name": "Receiver"
+  },
+  "purpose": "P2P",
+  "reference": "MIPIT-POC invalid amount"
+}

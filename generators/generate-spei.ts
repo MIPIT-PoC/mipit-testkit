@@ -1,16 +1,42 @@
-import { randomAmount, randomClabe, randomName, randomPurpose } from './utils.js';
+/**
+ * P10 — SPEI dataset generator.
+ *
+ * Audit finding G2: was emitting 18 *random* digits as CLABE (no mod-10
+ * weighted checksum) and 12 base64-ish chars as a "PIX key". Now uses the
+ * validating generators in `./utils.ts`.
+ *
+ * Output: SPEI→PIX test payloads (MXN→BRL) with proper CLABE check digit
+ * and a real DICT-shaped PIX key on the creditor side.
+ */
+import {
+  randomAmount,
+  randomClabe,
+  randomPixKey,
+  randomName,
+  randomPurpose,
+} from './utils.js';
 import fs from 'node:fs';
 
-function generateSpeiPayload() {
+interface SpeiDataset {
+  amount: number;
+  currency: string;
+  debtor: { alias: string; name: string };
+  creditor: { alias: string; name: string };
+  purpose: string;
+  reference: string;
+}
+
+function generateSpeiPayload(): SpeiDataset {
   return {
     amount: randomAmount(),
-    currency: 'USD',
+    // P10 — SPEI native currency is MXN.
+    currency: 'MXN',
     debtor: {
       alias: `SPEI-${randomClabe()}`,
       name: randomName(),
     },
     creditor: {
-      alias: `PIX-${Array.from({ length: 12 }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 62)]).join('')}`,
+      alias: `PIX-${randomPixKey()}`,
       name: randomName(),
     },
     purpose: randomPurpose(),

@@ -12,7 +12,7 @@ describe('E2E: PIX → SPEI', () => {
         amount: 150.25,
         currency: 'USD',
         debtor: { alias: 'PIX-alice.silva.2026', name: 'Alice Silva' },
-        creditor: { alias: 'SPEI-012345678901234567', name: 'Bob García' },
+        creditor: { alias: 'SPEI-012345678901234568', name: 'Bob García' },
         purpose: 'P2P',
         reference: 'E2E-TEST',
       }),
@@ -59,7 +59,7 @@ describe('E2E: PIX → SPEI', () => {
       amount: 100,
       currency: 'USD',
       debtor: { alias: 'PIX-test.idem.key', name: 'Test' },
-      creditor: { alias: 'SPEI-111111111111111111', name: 'Test Dest' },
+      creditor: { alias: 'SPEI-111111111111111115', name: 'Test Dest' },
     };
 
     const res1 = await fetch(`${API_URL}/payments`, {
@@ -89,7 +89,7 @@ describe('E2E: PIX → SPEI', () => {
         amount: 200,
         currency: 'USD',
         debtor: { alias: 'PIX-conflict.test' },
-        creditor: { alias: 'SPEI-222222222222222222' },
+        creditor: { alias: 'SPEI-222222222222222220' },
       }),
     });
 
@@ -100,7 +100,7 @@ describe('E2E: PIX → SPEI', () => {
         amount: 999,
         currency: 'USD',
         debtor: { alias: 'PIX-conflict.test' },
-        creditor: { alias: 'SPEI-333333333333333333' },
+        creditor: { alias: 'SPEI-333333333333333335' },
       }),
     });
 
