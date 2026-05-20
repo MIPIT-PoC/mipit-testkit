@@ -1,0 +1,14 @@
+{
+  "amount": 75000.50,
+  "currency": "COP",
+  "debtor": {
+    "alias": "BREB-+573001234567",
+    "name": "Diana López"
+  },
+  "creditor": {
+    "alias": "SPEI-012180001234567899",
+    "name": "Eduardo Hernández"
+  },
+  "purpose": "REMITTANCE",
+  "reference": "MIPIT-POC demo BRE_B 02"
+}

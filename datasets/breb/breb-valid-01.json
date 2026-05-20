@@ -1,14 +1,14 @@
 {
-  "amount": 500.00,
-  "currency": "USD",
+  "amount": 250000.00,
+  "currency": "COP",
   "debtor": {
-    "alias": "SPEI-987654321098765437",
+    "alias": "BREB-@carlos.bogota",
     "name": "Carlos Rodríguez"
   },
   "creditor": {
     "alias": "PIX-fernanda.pereira.br",
     "name": "Fernanda Pereira"
   },
-  "purpose": "REMITTANCE",
-  "reference": "MIPIT-POC demo 02"
+  "purpose": "P2P",
+  "reference": "MIPIT-POC demo BRE_B 01"
 }

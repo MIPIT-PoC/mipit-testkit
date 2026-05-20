@@ -9,7 +9,7 @@ describe('Integration: Idempotency', () => {
       amount: 100,
       currency: 'USD',
       debtor: { alias: 'PIX-idem.test.dup', name: 'Idem Test' },
-      creditor: { alias: 'SPEI-333333333333333333', name: 'Idem Dest' },
+      creditor: { alias: 'SPEI-333333333333333335', name: 'Idem Dest' },
       purpose: 'P2P',
     };
 
@@ -18,14 +18,14 @@ describe('Integration: Idempotency', () => {
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
       body: JSON.stringify(body),
     });
-    const data1 = await res1.json();
+    const data1 = (await res1.json()) as { payment_id?: string };
 
     const res2 = await fetch(`${API_URL}/payments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
       body: JSON.stringify(body),
     });
-    const data2 = await res2.json();
+    const data2 = (await res2.json()) as { payment_id?: string };
 
     expect(data1.payment_id).toBe(data2.payment_id);
   });
@@ -42,7 +42,7 @@ describe('Integration: Idempotency', () => {
         amount: 200,
         currency: 'USD',
         debtor: { alias: 'PIX-idem.conflict.a', name: 'Test A' },
-        creditor: { alias: 'SPEI-444444444444444444', name: 'Dest A' },
+        creditor: { alias: 'SPEI-444444444444444440', name: 'Dest A' },
       }),
     });
 
@@ -67,7 +67,7 @@ describe('Integration: Idempotency', () => {
       amount: 300,
       currency: 'USD',
       debtor: { alias: 'PIX-idem.diff.keys', name: 'Diff Keys' },
-      creditor: { alias: 'SPEI-666666666666666666', name: 'Dest Keys' },
+      creditor: { alias: 'SPEI-666666666666666660', name: 'Dest Keys' },
       purpose: 'TRANSFER',
     };
 
@@ -76,14 +76,14 @@ describe('Integration: Idempotency', () => {
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
       body: JSON.stringify(body),
     });
-    const data1 = await res1.json();
+    const data1 = (await res1.json()) as { payment_id?: string };
 
     const res2 = await fetch(`${API_URL}/payments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
       body: JSON.stringify(body),
     });
-    const data2 = await res2.json();
+    const data2 = (await res2.json()) as { payment_id?: string };
 
     expect(data1.payment_id).not.toBe(data2.payment_id);
   });

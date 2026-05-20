@@ -12,7 +12,7 @@ describe('E2E: Error Scenarios', () => {
         amount: 0,
         currency: 'USD',
         debtor: { alias: 'PIX-error.zero.amount', name: 'Error Test' },
-        creditor: { alias: 'SPEI-012345678901234567', name: 'Error Dest' },
+        creditor: { alias: 'SPEI-012345678901234568', name: 'Error Dest' },
         purpose: 'P2P',
       }),
     });
@@ -35,7 +35,7 @@ describe('E2E: Error Scenarios', () => {
         amount: 150.25,
         currency: 'USD',
         debtor: { alias: 'PIX-sandbox.fail.test', name: 'Sandbox Fail' },
-        creditor: { alias: 'SPEI-999999999999999999', name: 'Fail Dest' },
+        creditor: { alias: 'SPEI-999999999999999995', name: 'Fail Dest' },
         purpose: 'P2P',
         reference: 'FORCE-REJECT',
       }),

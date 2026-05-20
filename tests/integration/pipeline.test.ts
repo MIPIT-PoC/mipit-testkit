@@ -17,12 +17,12 @@ describe('Integration: Pipeline (Core without adapters)', () => {
       body: JSON.stringify(payload),
     });
 
-    const { payment_id, status } = await res.json();
+    const { payment_id, status } = (await res.json()) as { payment_id: string; status: string };
     expect(status).toBe('RECEIVED');
 
     // Poll for state progression
     await new Promise((r) => setTimeout(r, 3000));
-    const detail = await (await fetch(`${API_URL}/payments/${payment_id}`)).json();
+    const detail = (await (await fetch(`${API_URL}/payments/${payment_id}`)).json()) as { status?: string; canonical?: { amount?: number } };
 
     expect(['TRANSLATED', 'ROUTED', 'SENT', 'COMPLETED', 'REJECTED']).toContain(detail.status);
   }, 15_000);
@@ -39,13 +39,13 @@ describe('Integration: Pipeline (Core without adapters)', () => {
       },
       body: JSON.stringify(payload),
     });
-    const { payment_id } = await res.json();
+    const { payment_id } = (await res.json()) as { payment_id: string };
 
     await new Promise((r) => setTimeout(r, 3000));
-    const detail = await (await fetch(`${API_URL}/payments/${payment_id}`)).json();
+    const detail = (await (await fetch(`${API_URL}/payments/${payment_id}`)).json()) as { status?: string; canonical?: { amount?: number } };
 
     expect(detail.canonical).toBeDefined();
-    expect(detail.canonical.amount).toBe(500.00);
+    expect(detail.canonical?.amount).toBe(500.00);
   }, 15_000);
 
   it('should generate audit events for each pipeline stage', async () => {
