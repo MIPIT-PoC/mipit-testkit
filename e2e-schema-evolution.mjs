@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-schema-evolution.mjs
+ * @description Backward-compatibility test that exercises older canonical payloads, optional-field defaults, and all 7 translators with partial inputs.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT — Schema Evolution Test (Backward Compatibility)
  *
  * Verifies that:

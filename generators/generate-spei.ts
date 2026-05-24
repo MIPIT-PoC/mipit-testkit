@@ -1,4 +1,10 @@
 /**
+ * @file generate-spei.ts
+ * @description SPEI→PIX test dataset generator (MXN→BRL) emitting CLABE accounts with valid mod-10 weighted check digit and DICT-shaped PIX keys on the creditor side.
+ * @author María Camila Osuna
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * P10 — SPEI dataset generator.
  *
  * Audit finding G2: was emitting 18 *random* digits as CLABE (no mod-10

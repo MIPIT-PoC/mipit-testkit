@@ -1,3 +1,9 @@
+/**
+ * @file run-validation-suite.ts
+ * @description Orchestrator that runs all validation scenarios sequentially against local or deployed environments and produces a consolidated JSON+Markdown report.
+ * @author Nicolás Calderón
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
 import * as fs from 'node:fs';
 import * as fsp from 'node:fs/promises';
 import * as path from 'node:path';

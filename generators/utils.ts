@@ -1,3 +1,9 @@
+/**
+ * @file utils.ts
+ * @description Shared dataset-generation utilities: checksum-aware constructors for CPF, CLABE, NIT, PIX keys, plus random amount and name helpers.
+ * @author Miguel Ángel Rico
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
 import { ulid } from 'ulid';
 import { randomInt, randomBytes } from 'node:crypto';
 

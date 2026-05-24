@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-retry-timeout.mjs
+ * @description Timeout and retry verification that drives mock servers to return 503 and validates exponential backoff behaviour of the adapters.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT — Timeout/Retry Verification
  *
  * Verifies that when a mock server returns 503 (Service Unavailable),

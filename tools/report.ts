@@ -1,3 +1,9 @@
+/**
+ * @file report.ts
+ * @description Aggregates raw batch-run JSON files from evidence/ into a single summary with success/failure/rejected counts and p50/p95/p99 latency percentiles.
+ * @author Nicolás Calderón
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 

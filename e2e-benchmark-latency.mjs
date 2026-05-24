@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-benchmark-latency.mjs
+ * @description Latency benchmark over 4 core endpoints with warmup + measurement phases, reporting p50/p95/p99.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT — Latency Benchmark (k6-equivalent in Node.js)
  *
  * Measures p50/p90/p95/p99/max latency for:

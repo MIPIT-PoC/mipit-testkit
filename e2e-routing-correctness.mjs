@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-routing-correctness.mjs
+ * @description Stress test that sends 999 payments and verifies the destination_rail of each one in the database.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT Routing Correctness Test
- * 
+ *
  * Verifies that N payments destined to PIX all arrive at PIX,
  * and N payments destined to BRE_B all arrive at BRE_B.
  * No cross-contamination, no lost payments.

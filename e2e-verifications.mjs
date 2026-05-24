@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-verifications.mjs
+ * @description End-to-end verification suite: 8 groups (idempotency, alias validation, FX, round-trip, limits, error coverage, webhooks, audit) totalling 77 assertions.
+ * @author María Camila Osuna
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT — 8 Comprehensive E2E Verification Tests
  *
  * 1. Idempotency under concurrency

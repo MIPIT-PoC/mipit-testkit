@@ -1,4 +1,10 @@
 /**
+ * @file generate-breb.ts
+ * @description Bre-B (Colombia COP) test dataset generator with valid llaves (CC, NIT mod-11, +57 mobile, email) targeting PIX or SPEI destinations.
+ * @author María Camila Osuna
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * P10 — Bre-B dataset generator (NEW, was missing entirely per audit G3).
  *
  * Bre-B is Colombia's BanRep instant payment rail launched 2025-09 and

@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-resilience.mjs
+ * @description Resilience test that kills adapters mid-flow and verifies RabbitMQ redelivery, DLQ routing, and recovery on restart.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT — Resilience Testing
  *
  * Verifies that when an adapter is killed mid-processing:

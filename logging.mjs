@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * @file logging.mjs
+ * @description Trace logger and fetch-with-trace helper shared by all e2e scripts: writes sanitized request/response records (sensitive keys redacted) to evidence/.
+ * @author Miguel Ángel Rico
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
 
 import fs from 'node:fs';
 import path from 'node:path';

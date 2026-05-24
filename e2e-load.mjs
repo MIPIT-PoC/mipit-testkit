@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 /**
+ * @file e2e-load.mjs
+ * @description Load test that sends N payments with configurable concurrency to evaluate rate-limiter activation and response latency.
+ * @author Carlos Mejía
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * MIPIT Load Test — Node.js version (async HTTP, no fork overhead)
  * Usage: TOKEN=xxx node e2e-load.mjs [totalRequests] [concurrency]
  */

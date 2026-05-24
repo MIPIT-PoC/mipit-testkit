@@ -1,4 +1,10 @@
 /**
+ * @file generate-pix.ts
+ * @description PIX→SPEI test dataset generator (BRL→MXN) emitting checksum-bearing PIX keys (CPF, phone, email, EVP) and valid CLABE creditor accounts.
+ * @author María Camila Osuna
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * P10 — PIX dataset generator.
  *
  * Audit finding G2: previous version emitted random base64-ish strings as

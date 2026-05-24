@@ -1,4 +1,10 @@
 /**
+ * @file generate-batch.ts
+ * @description Mixed batch generator that emits uniform random payloads across all 6 directional rail-pairs (PIX/SPEI/BRE_B) for load and routing tests.
+ * @author María Camila Osuna
+ * @project MIPIT-PoC — Cross-border Instant Payments Middleware
+ */
+/**
  * P10 — Mixed batch generator covering all 6 directional rail-pairs.
  *
  * Audit G3: previous version only knew about PIX↔SPEI (2 of 6 pairs).
